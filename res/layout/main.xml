@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/backgrounddarkblue"
+     >
+
+    <TextView
+        android:id="@+id/currentLocationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:text="*** No Internet or Bad Location ***" />
+
+    <TextView
+        android:id="@+id/currentTempTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/currentLocationTextView"
+        android:ems="10"
+        android:text="*** Now Temp ***" />
+
+    <TextView
+        android:id="@+id/currentDescriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/currentTempTextView"
+        android:ems="10"
+        android:text="*** Now Description ***" />
+
+      <TextView
+          android:id="@+id/forecastTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentLeft="true"
+          android:layout_below="@+id/currentDescriptionTextView"
+          android:layout_marginTop="66dp"
+          android:ems="10"
+          android:text="*** Forecast Here ***"
+          android:visibility="gone" />
+
+       <TextView
+           android:id="@+id/currentLowTextView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_below="@+id/currentDescriptionTextView"
+           android:ems="10"
+           android:text="*** Now Humidity ***" />
+
+       <TextView
+           android:id="@+id/lastUpdatedTextView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_below="@+id/currentLowTextView"
+           android:ems="10"
+           android:text="*** Last Updated ***" />
+
+       <Button
+           android:id="@+id/refreshWeatherButton"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignBottom="@+id/changeLocationButton"
+           android:layout_alignParentLeft="true"
+           android:layout_marginLeft="42dp"
+           android:text="Refresh" />
+
+       <Button
+           android:id="@+id/changeLocationButton"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+           android:layout_marginBottom="65dp"
+           android:layout_marginLeft="27dp"
+           android:layout_toRightOf="@+id/refreshWeatherButton"
+           android:text="Change Location" />
+
+</RelativeLayout>
