@@ -35,6 +35,32 @@
     <item>5</item>
 </string-array>
 
+<string-array name="refresh_options">
+    <item>Every Hour</item>
+    <item>Every 30 Minutes</item>
+    <item>Every 10 Minutes</item>
+    <item>Every 5 Minutes</item>
+    <item>Every 1 Minute</item>
+    <item>Every 6 Hours</item>
+    <item>Every 12 Hours</item>
+    <item>Every 24 Hours</item>
+    <item>No Auto Refresh</item>
+	</string-array>
+	
+<string-array name="refresh_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    <item>6</item>
+    <item>7</item>
+    <item>8</item>
+	</string-array>
+	
+
+
 <string-array name="penSize_options">
     <item>1 Largest</item>
     <item>2</item>

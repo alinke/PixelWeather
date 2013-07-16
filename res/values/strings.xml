@@ -97,12 +97,17 @@
     <string name="dialogTitleFPSOverride">Frames per Second</string>
     <string name="FPSOverrideDefault">0</string>  
     
+      <string name="weather_refresh">weather_refresh</string>
+    <string name="weatherRefreshTitle">Weather Refresh Frequency</string>
+    <string name="weatherRefreshSummary">How often the auto refresh the weather</string>    
+    <string name="dialogTitleweatherRefresh">Weather Refresh Frequency</string>
+    <string name="weatherRefreshDefault">0</string>  
     
  
 <string name="analog_label">Alcohol Sensor:</string>
 <string name="detected_label">Magic Mirror Status:</string>    
 <string name="myLocationString">My Location</string>      
-<string name="prefTitle">Magic Mirror Settings</string>
+<string name="prefTitle">PIXEL Weather Settings</string>
 <string name="breathalyzerStatusText">Magic Mirror Status:</string>
 <string name="character_default_value">1</string>
 <string name="dialogTitleVoice">Select Character</string>

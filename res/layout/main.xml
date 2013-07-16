@@ -80,4 +80,14 @@
            android:layout_toRightOf="@+id/refreshWeatherButton"
            android:text="Change Location" />
 
+       <TextView
+           android:id="@+id/weatherRefreshTextView"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentLeft="true"
+           android:layout_alignRight="@+id/changeLocationButton"
+           android:layout_below="@+id/lastUpdatedTextView"
+           android:ems="10"
+           android:text="*** Auto Refresh Interval ***" />
+
 </RelativeLayout>

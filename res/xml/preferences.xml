@@ -27,7 +27,14 @@
     android:defaultValue="@string/pref_noSleepDefault"
     android:summary="@string/noSleepSummary"/>
     
-    
+    <ListPreference
+    android:key="@string/weather_refresh"
+    android:title="@string/weatherRefreshTitle"
+    android:summary="@string/weatherRefreshSummary"
+    android:entries="@array/refresh_options"
+    android:entryValues="@array/refresh_values"
+    android:dialogTitle="@string/dialogTitleweatherRefresh"
+    android:defaultValue="@string/weatherRefreshDefault" />
     
       <!-- <CheckBoxPreference
     android:title="Call Taxi"

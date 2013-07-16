@@ -108,6 +108,7 @@ public class pixelWeather extends IOIOActivity {
 	private TextView currentHighTextView_;
 	private TextView currentLowTextView_;
 	private TextView lastUpdatedTextView_;
+	private TextView weatherRefreshTextView_;
 	
 //	private TextView proximity_label_;
 //	private TextView pot_label_;
@@ -135,6 +136,9 @@ public class pixelWeather extends IOIOActivity {
   	private static Bitmap resizedBitmap;  
   	private int matrix_model;
   	private int weatherObtained = 0;
+  	
+  	private int refreshWeather_;
+  	private String refreshWeatherText_ = null;
   	
     private static Context context;
     private Context frameContext;
@@ -223,6 +227,7 @@ public class pixelWeather extends IOIOActivity {
 	private String statusNotconnectedText;
 	private String blowPrompt;
 	private String weatherCity;
+	private int refreshWeatherTimerInterval;
 	
 	
 	/** Change location */
@@ -313,6 +318,7 @@ public class pixelWeather extends IOIOActivity {
 	private static String IOIOLibVersion = "Not Found";
 	private static VersionType v;
 	private ConnectTimer connectTimer; 
+	private RefreshTimer refreshTimer; 
 	private static DecodedTimer decodedtimer; 
 	private Button changeLocationButton_;
 	private Button refreshWeatherButton_;
@@ -373,6 +379,7 @@ public class pixelWeather extends IOIOActivity {
        // currentHighTextView_ = (TextView)findViewById(R.id.currentHighTextView);
         currentLowTextView_ = (TextView)findViewById(R.id.currentLowTextView);
         lastUpdatedTextView_ = (TextView)findViewById(R.id.lastUpdatedTextView);
+        weatherRefreshTextView_ = (TextView)findViewById(R.id.weatherRefreshTextView);
         
      
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/freepixel.ttf");
@@ -387,6 +394,7 @@ public class pixelWeather extends IOIOActivity {
        // currentHighTextView_.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         currentLowTextView_.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         lastUpdatedTextView_.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        weatherRefreshTextView_.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         
         
         
@@ -400,6 +408,12 @@ public class pixelWeather extends IOIOActivity {
         
         connectTimer = new ConnectTimer(30000,5000); //pop up a message if it's not connected by this timer
  		connectTimer.start(); //this timer will pop up a message box if the device is not found
+  		
+  		//the weather auto-refresh timer
+ 		if (refreshWeatherTimerInterval != 0) {
+  			refreshTimer = new RefreshTimer(refreshWeatherTimerInterval,refreshWeatherTimerInterval/2); //pop up a message if it's not connected by this timer
+  	  		refreshTimer.start(); //this timer will pop up a message box if the device is not found
+  		}
  		
  		context = getApplicationContext();
 
@@ -423,6 +437,7 @@ public class pixelWeather extends IOIOActivity {
 			//weathercheck.execute();
 			//stockUpdate();
 			
+			setWeatherRefresh(refreshWeatherText_);
 			
 			
 			changeLocationButton_.setOnClickListener(new View.OnClickListener() {  //if the user wants to change the location
@@ -713,6 +728,13 @@ public class pixelWeather extends IOIOActivity {
     	
     	setPreferences(); //very important to have this here, after the menu comes back this is called, we'll want to apply the new prefs without having to re-start the app
     	//update stocks
+    	setWeatherRefresh(refreshWeatherText_);
+    	
+    	if (refreshWeatherTimerInterval !=0) {  //this timer would have been running so let's start and stop as the user may have picked a new time
+    		refreshTimer.cancel();
+  			refreshTimer = new RefreshTimer(refreshWeatherTimerInterval,refreshWeatherTimerInterval/2); //pop up a message if it's not connected by this timer
+  	  		refreshTimer.start(); //this timer will pop up a message box if the device is not found
+  		}
     	
     //	vid.start();
     	
@@ -776,6 +798,55 @@ public class pixelWeather extends IOIOActivity {
 		    	 fps = 0;
 		     }
 		     
+		     refreshWeather_ = Integer.valueOf(prefs.getString(   //the selected RGB LED Matrix Type
+		    	        resources.getString(R.string.weather_refresh),
+		    	        resources.getString(R.string.weatherRefreshDefault))); 
+		     
+		     switch (refreshWeather_) {  //get this from the preferences
+		     case 0:
+		    	 refreshWeatherText_ = "Auto Refresh Every Hour";
+		    	 refreshWeatherTimerInterval = 3600000;
+		    	 break;
+		     case 1:
+		    	 refreshWeatherText_ = "Auto Refresh Every 30 Minutes";
+		    	 refreshWeatherTimerInterval = 1800000;
+		    	 break;
+		     case 2:
+		    	 refreshWeatherText_ = "Auto Refresh Every 10 Minutes";
+		    	 refreshWeatherTimerInterval = 600000;
+		    	 break;
+		     case 3:
+		    	 refreshWeatherText_ = "Auto Refresh Every 5 Minutes";
+		    	 refreshWeatherTimerInterval = 300000;
+		    	 break;
+		     case 4:
+		    	 refreshWeatherText_ = "Auto Refresh Every Minute";
+		    	 refreshWeatherTimerInterval = 60000;
+		    	 break;
+		     case 5:
+		    	 refreshWeatherText_ = "Auto Refresh Every 6 Hours";
+		    	 refreshWeatherTimerInterval = 21600000;
+		    	 break;
+		     case 6:
+		    	 refreshWeatherText_ = "Auto Refresh Every 12 Hours";
+		    	 refreshWeatherTimerInterval = 43200000;
+		    	 break;
+		     case 7:
+		    	 refreshWeatherText_ = "Auto Refresh Every 24 Hours";
+		    	 refreshWeatherTimerInterval = 86400000;
+		    	 break;
+		     case 8:
+		    	 refreshWeatherText_ = "No Auto Refresh, Enable Auto Refresh from Settings";
+		    	 refreshWeatherTimerInterval = 0;
+		    	 break;
+		     default:	    		 
+		    	 refreshWeatherText_ = "Auto Refresh Every Hour";
+		    	 refreshWeatherTimerInterval = 3600000;
+		     }
+		     
+		     
+		  
+		  
 		  //   switch (matrix_model) {  //get this from the preferences
 		    // case 0:
 		    	// KIND = ioio.lib.api.RgbLedMatrix.Matrix.SEEEDSTUDIO_32x16;
@@ -806,6 +877,30 @@ public class pixelWeather extends IOIOActivity {
 			 loadRGB565(); //this function loads a raw RGB565 image to the matrix
     
  }
+   
+  // private void requestUpdateWeather(){
+   //	Message msgFetchData = new Message();
+   //	msgFetchData.what = REG_GET_WEATHER_START;
+   	//m_HandleRequest.sendMessage(msgFetchData);    	
+//}
+   
+   private void requestUpdateWeather() {
+	   runOnUiThread(new Runnable() {
+		   public void run() {
+				Message msgFetchData = new Message();
+			   	msgFetchData.what = REG_GET_WEATHER_START;
+			   	m_HandleRequest.sendMessage(msgFetchData);  
+		   }
+	   });
+   }
+   
+   private void setWeatherRefresh(final String str) {
+	   runOnUiThread(new Runnable() {
+		   public void run() {
+			   weatherRefreshTextView_.setText(str);
+		   }
+	   });
+   }
    
    private void setWeatherText(final String str) {
 	   runOnUiThread(new Runnable() {
@@ -1283,11 +1378,11 @@ public class pixelWeather extends IOIOActivity {
   
    
    
-  private void requestUpdateWeather(){
-	    	Message msgFetchData = new Message();
-	    	msgFetchData.what = REG_GET_WEATHER_START;
-	    	m_HandleRequest.sendMessage(msgFetchData);    	
-	 }
+  //private void requestUpdateWeather(){
+//	    	Message msgFetchData = new Message();
+//	    	msgFetchData.what = REG_GET_WEATHER_START;
+//	    	m_HandleRequest.sendMessage(msgFetchData);    	
+//	 }
 	 
 	 private void displayNotifyCation(int nResID){
 			Toast.makeText(getApplicationContext(), getString(nResID),
@@ -1495,6 +1590,30 @@ public class pixelWeather extends IOIOActivity {
    			//not used
    		}
    	}
+    
+    public class RefreshTimer extends CountDownTimer
+   	{
+
+   		public RefreshTimer(long startTime, long interval)
+   			{
+   				super(startTime, interval);
+   			}
+
+   		@Override
+   		public void onFinish()
+   			{
+   			requestUpdateWeather(); //get the latest weather codes
+   			refreshTimer.start();
+   				
+   			}
+
+   		@Override
+   		public void onTick(long millisUntilFinished)				{
+   			//not used
+   		}
+   	}
+    
+	
     
     public void animateWeather() throws IOException  {
     	 InputStream iS = null;  
